@@ -1,5 +1,5 @@
 const Video=require('../models/videoModel');
-
+const {scrapeYouTubeVideoData}=require('../services/scraperService')
 
 const getVideos=async(req,res)=>{
     try {
@@ -10,9 +10,10 @@ const getVideos=async(req,res)=>{
       }
 };
 const addVideo=async(req,res)=>{
-    const { title, description, views, uploadDate, channelId, videoId } = req.body;
+  const { videoUrl } = req.body;
   try {
-    const newVideo = new Video({ title, description, views, uploadDate, channelId, videoId });
+    const videoData = await scrapeYouTubeVideoData(videoUrl);
+    const newVideo = new Video(videoData);
     await newVideo.save();
     res.status(201).json(newVideo);
   } catch (err) {
