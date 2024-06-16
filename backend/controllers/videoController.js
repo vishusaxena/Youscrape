@@ -20,7 +20,29 @@ const addVideo=async(req,res)=>{
     res.status(500).json({ error: err.message });
   }
 };
+const deleteVideo=async(req,res)=>{
+  const { id } = req.params;
+  try {
+    await Video.findByIdAndDelete(id);
+    res.json({ message: 'Video deleted' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+const updateVideo=async(req,res)=>{
+  const { id } = req.params;
+  const updates = req.body;
+  try {
+    const video = await Video.findByIdAndUpdate(id, updates, { new: true });
+    res.json(video);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+
+};
 module.exports={
     getVideos,
     addVideo,
+    deleteVideo,
+    updateVideo,
 }
